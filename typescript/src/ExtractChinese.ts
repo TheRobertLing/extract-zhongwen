@@ -1,6 +1,5 @@
 type ExtractChineseOptions = {
   normalizeUnicode?: boolean;
-  removePunctuation?: boolean;
   removeDuplicates?: boolean; // Does not remove simplified/traditional character duplicates e.g. 国, 國 will both remain
   includeCharacters?: string;
   excludeCharacters?: string;
@@ -49,45 +48,6 @@ const characterUnicodeRanges: UnicodeRanges[] = [
 
   // Exclude since they just structural indicators
   // [0x2ff0, 0x2fff], // Ideographic Description Characters
-];
-
-const punctuationUnicodeRanges: [number, number][] = [
-  // May not be exhaustive list. Punctuation marks sourced from:
-  // https://baike.baidu.com/item/%E6%A0%87%E7%82%B9%E7%AC%A6%E5%8F%B7/588793
-  [0x3002, 0x3002], // 。
-  [0xff1f, 0xff1f], // ？
-  [0xff01, 0xff01], // ！
-  [0xff0c, 0xff0c], // ，
-  [0x3001, 0x3001], // 、
-  [0xff1b, 0xff1b], // ；
-  [0xff1a, 0xff1a], // ：
-  [0x201c, 0x201c], // “
-  [0x201d, 0x201d], // ”
-  [0x2018, 0x2018], // ‘
-  [0x2019, 0x2019], // ’
-  [0x300e, 0x300e], //『
-  [0x300f, 0x300f], // 』
-  [0x300c, 0x300c], //「
-  [0x300d, 0x300d], // 」
-  [0xff08, 0xff08], //（
-  [0xff09, 0xff09], // ）
-  [0x005b, 0x005b], // [
-  [0x005d, 0x005d], // ]
-  [0x3014, 0x3014], //〔
-  [0x3015, 0x3015], // 〕
-  [0x3010, 0x3010], //【
-  [0x3011, 0x3011], // 】
-  [0x2014, 0x2014], // ─
-  [0x2016, 0x2016], // ‖
-  [0x00b7, 0x00b7], // · (same as 着重号)
-  [0x002d, 0x002d], // -
-  [0xff5e, 0xff5e], // ~
-  [0x300a, 0x300a], //《
-  [0x300b, 0x300b], // 》
-  [0x3008, 0x3008], //〈
-  [0x3009, 0x3009], // 〉
-  [0x005f, 0x005f], // _
-  [0x002f, 0x002f], // /
 ];
 
 /**
@@ -146,13 +106,20 @@ const combineToRegex = (
 };
 
 const removeDuplicatesFromString = (str: string): string => {
-  const seen = new Set<string>();
+  const seen = new Set<number>();
   let result = "";
 
   for (let i = 0, n = str.length; i < n; i++) {
-    if (!seen.has(str[i])) {
-      result += str[i];
-      seen.add(str[i]);
+    // https://www.linkedin.com/pulse/staying-clear-surrogate-pairs-issues-javascript-mazen-sharkawy-ofw1f/
+    const code: number = str.codePointAt(i)!;
+
+    if (!seen.has(code)) {
+      result += String.fromCodePoint(code);
+      seen.add(code);
+    }
+
+    if (code > 0xffff) {
+      i++;
     }
   }
 
@@ -163,7 +130,6 @@ const extractChinese = (
   input: string,
   {
     normalizeUnicode = true,
-    removePunctuation = true,
     removeDuplicates = false,
     includeCharacters = "",
     excludeCharacters = "",
@@ -173,17 +139,11 @@ const extractChinese = (
     input = input.normalize("NFKC");
   }
 
-  const { whitelist, blacklist } = removePunctuation
-    ? combineToRegex(
-        characterUnicodeRanges,
-        includeCharacters,
-        excludeCharacters
-      )
-    : combineToRegex(
-        characterUnicodeRanges.concat(punctuationUnicodeRanges),
-        includeCharacters,
-        excludeCharacters
-      );
+  const { whitelist, blacklist } = combineToRegex(
+    characterUnicodeRanges,
+    includeCharacters,
+    excludeCharacters
+  );
 
   input = input.replace(whitelist, "");
   input = input.replace(blacklist, "");
