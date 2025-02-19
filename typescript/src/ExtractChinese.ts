@@ -20,7 +20,6 @@ type UnicodeRanges = [number, number];
  * The main differences include:
  * - Excludes CJK Compatibility Range [0x3300, 0x33ff]
  * - Excludes CJK Compatibility Forms [0xfe30, 0xfe4f]
- * - Includes more punctuation symbols
  *
  * All unicode ranges were sourced from:
  * https://www.unicode.org/charts/
@@ -44,9 +43,9 @@ const characterUnicodeRanges: UnicodeRanges[] = [
 
   [0x2f00, 0x2fd5], // Kangxi Radicals,
   [0x2e80, 0x2ed3], // CJK Radicals Supplement
-  [0x31c0, 0x31ef], // CJK Strokes
+  [0x31c0, 0x31e5], // CJK Strokes. Techically ends at 0x31ef, but 0x31ef is an ideographic description character
 
-  // Exclude since they just structural indicators
+  // Exclude since they are just structural indicators
   // [0x2ff0, 0x2fff], // Ideographic Description Characters
 ];
 
@@ -130,29 +129,46 @@ const extractChinese = (
   input: string,
   {
     normalizeUnicode = true,
-    removeDuplicates = false,
+    removeDuplicates = true,
     includeCharacters = "",
     excludeCharacters = "",
   }: ExtractChineseOptions = {}
 ): string => {
-  if (normalizeUnicode) {
-    input = input.normalize("NFKC");
-  }
-
   const { whitelist, blacklist } = combineToRegex(
     characterUnicodeRanges,
     includeCharacters,
     excludeCharacters
   );
 
-  input = input.replace(whitelist, "");
-  input = input.replace(blacklist, "");
+  const original: string = input;
+  const whitelistSet: Set<string> = new Set(includeCharacters.split(""))
+
+  if (normalizeUnicode) {
+    input = input.normalize("NFKC");
+  }
+
+  for (let i = 0, j = 0, m = original.length, n = input.length; i < m && j < n; ) {
+    const char1 = String.fromCodePoint(original.codePointAt(i)!);
+    const char2 = String.fromCodePoint(input.codePointAt(j)!);
+
+    if (char1 !== char2 && whitelistSet.has(char1)) {
+        // Reform string to avoid corruption due to surrogate pairs
+        input = input.substring(0, j) + char1 + input.substring(j + char2.length);
+    }
+
+    i += char1.length;
+    j += char2.length;
+}
+
 
   if (removeDuplicates) {
     input = removeDuplicatesFromString(input);
   }
 
+  input = input.replace(whitelist, "");
+  input = input.replace(blacklist, "");
+
   return input;
 };
 
-export { extractChinese };
+export { ExtractChineseOptions, extractChinese };
