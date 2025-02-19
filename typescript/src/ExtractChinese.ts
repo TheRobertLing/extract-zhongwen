@@ -141,32 +141,41 @@ const extractChinese = (
   );
 
   const original: string = input;
-  const whitelistSet: Set<string> = new Set(includeCharacters.split(""))
+  const whiteblacklistSet: Set<string> = new Set([
+    ...includeCharacters.split(""),
+    ...excludeCharacters.split(""),
+  ]);
 
+
+  // Normalize string but prevent whitelisted characters from being normalized
   if (normalizeUnicode) {
     input = input.normalize("NFKC");
-  }
 
-  for (let i = 0, j = 0, m = original.length, n = input.length; i < m && j < n; ) {
-    const char1 = String.fromCodePoint(original.codePointAt(i)!);
-    const char2 = String.fromCodePoint(input.codePointAt(j)!);
+    for (
+      let i = 0, j = 0, m = original.length, n = input.length;
+      i < m && j < n;
 
-    if (char1 !== char2 && whitelistSet.has(char1)) {
+    ) {
+      const char1 = String.fromCodePoint(original.codePointAt(i)!);
+      const char2 = String.fromCodePoint(input.codePointAt(j)!);
+
+      if (char1 !== char2 && whiteblacklistSet.has(char1)) {
         // Reform string to avoid corruption due to surrogate pairs
-        input = input.substring(0, j) + char1 + input.substring(j + char2.length);
+        input =
+          input.substring(0, j) + char1 + input.substring(j + char2.length);
+      }
+
+      i += char1.length;
+      j += char2.length;
     }
-
-    i += char1.length;
-    j += char2.length;
-}
-
-
-  if (removeDuplicates) {
-    input = removeDuplicatesFromString(input);
   }
 
   input = input.replace(whitelist, "");
   input = input.replace(blacklist, "");
+
+  if (removeDuplicates) {
+    input = removeDuplicatesFromString(input);
+  }
 
   return input;
 };
