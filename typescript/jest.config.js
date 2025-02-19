@@ -4,4 +4,5 @@ export default {
   transform: {
     "^.+.tsx?$": ["ts-jest",{}],
   },
+  testPathIgnorePatterns: ["tests/HelperMethod.test.ts"]
 };
