@@ -154,7 +154,7 @@ const extractChinese = (
     for (
       let i = 0, j = 0, m = original.length, n = input.length;
       i < m && j < n;
-
+      // Iterator manually incremented
     ) {
       const char1 = String.fromCodePoint(original.codePointAt(i)!);
       const char2 = String.fromCodePoint(input.codePointAt(j)!);
