@@ -1,3 +1,4 @@
+import { describe, expect, test } from "@jest/globals";
 import { ExtractChineseOptions, extractChinese } from "../src/ExtractChinese";
 
 type TestInput = {
