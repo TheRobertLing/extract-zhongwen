@@ -62,11 +62,7 @@ const unicodeToRegex = (ranges: UnicodeRanges[]): string => {
 
   for (let i = 0, n = ranges.length; i < n; i++) {
     const [start, end] = ranges[i];
-    if (start === end) {
-      result += `\\u{${start.toString(16)}}`;
-    } else {
-      result += `\\u{${start.toString(16)}}-\\u{${end.toString(16)}}`;
-    }
+    result += `\\u{${start.toString(16)}}-\\u{${end.toString(16)}}`;
   }
 
   return result;
