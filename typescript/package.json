@@ -2,9 +2,20 @@
   "name": "chinese-extract",
   "version": "1.0.0",
   "description": "Utility for extracting chinese characters from a string",
-  "main": "dist/index.js",
+  "main": "./cjs/ExtractChinese.js",
+  "module": "./esm/ExtractChinese.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    "import": "./esm/ExtractChinese.js",
+    "require": "./cjs/ExtractChinese.js"
+  },
+  "files": [
+    "cjs/",
+    "esm/",
+    "types/"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
     "test": "jest --coverage"
   },
   "repository": {
