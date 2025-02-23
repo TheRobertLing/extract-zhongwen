@@ -7,7 +7,7 @@ extract-chinese is a small utility designed to extract Chinese characters from a
 ## Installation
 
 ```bash
-npm install extract-chinese
+npm install extract-zhongwen
 ```
 
 ## Features
@@ -58,7 +58,7 @@ An object containing configuration options.
 ## Example Usage
 
 ```typescript
-import { extractChinese } from "extract-chinese";
+import { extractChinese } from "extract-zhongwen";
 
 console.log(extractChinese("中文字符 English Characters"));
 // Output: "中文字符"
