@@ -1,5 +1,5 @@
 {
-  "name": "chinese-extract",
+  "name": "extract-chinese",
   "version": "1.0.0",
   "description": "Utility for extracting chinese characters from a string",
   "main": "./cjs/ExtractChinese.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheRobertLing/chinese-extract.git"
+    "url": "git+https://github.com/TheRobertLing/extract-chinese.git"
   },
   "keywords": [
     "chinese",
@@ -35,9 +35,9 @@
   "author": "Robert L",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TheRobertLing/chinese-extract/issues"
+    "url": "https://github.com/TheRobertLing/extract-chinese/issues"
   },
-  "homepage": "https://github.com/TheRobertLing/chinese-extract#readme",
+  "homepage": "https://github.com/TheRobertLing/extract-chinese#readme",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
