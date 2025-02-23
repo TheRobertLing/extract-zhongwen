@@ -1,5 +1,5 @@
 {
-  "name": "extract-chinese",
+  "name": "extract-zhongwen",
   "version": "1.0.0",
   "description": "Utility for extracting chinese characters from a string",
   "main": "./cjs/ExtractChinese.js",
@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
+    "prepublishOnly": "npm run build",
     "test": "jest --coverage"
   },
   "repository": {
