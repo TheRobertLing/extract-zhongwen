@@ -21,10 +21,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheRobertLing/extract-chinese.git"
+    "url": "git+https://github.com/TheRobertLing/extract-zhongwen.git"
   },
   "keywords": [
     "chinese",
+    "zhongwen",
     "hanzi",
     "simplified",
     "traditional",
@@ -36,9 +37,9 @@
   "author": "Robert L",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TheRobertLing/extract-chinese/issues"
+    "url": "https://github.com/TheRobertLing/extract-zhongwen/issues"
   },
-  "homepage": "https://github.com/TheRobertLing/extract-chinese#readme",
+  "homepage": "https://github.com/TheRobertLing/extract-zhongwen#readme",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
