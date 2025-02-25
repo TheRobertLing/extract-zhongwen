@@ -1,6 +1,6 @@
-# extract-chinese
+# extract-zhongwen
 
-extract-chinese is a small utility designed to extract Chinese characters from a given string based on Unicode Ranges.
+extract-zhongwen is a small utility designed to extract Chinese characters from a given string based on Unicode Ranges.
 
 ---
 
@@ -20,9 +20,9 @@ npm install extract-zhongwen
 ## Function Signature
 
 ```typescript
-const extractChinese = (
+const extract = (
   input: string,
-  options?: ExtractChineseOptions
+  options?: Options
 ): string
 ```
 
@@ -32,7 +32,7 @@ const extractChinese = (
 
 The input string from which Chinese characters will be extracted.
 
-### `options` (ExtractChineseOptions)
+### `options` (Options)
 
 An object containing configuration options.
 
@@ -58,36 +58,36 @@ An object containing configuration options.
 ## Example Usage
 
 ```typescript
-import { extractChinese } from "extract-zhongwen";
+import { extract } from "extract-zhongwen";
 
-console.log(extractChinese("中文字符 English Characters"));
+console.log(extract("中文字符 English Characters"));
 // Output: "中文字符"
 
 // Example with normalization (NFKC)
-console.log(extractChinese("社 社 祖 租", { normalizeUnicode: true }));
+console.log(extract("社 社 祖 租", { normalizeUnicode: true }));
 // Output: "社社租租"
 
 // Example with duplicate removal
-console.log(extractChinese("你好 你好 世界 世界", { removeDuplicates: true }));
+console.log(extract("你好 你好 世界 世界", { removeDuplicates: true }));
 // Output: "你好世界"
 
 // Example with duplicate removal disabled
-console.log(extractChinese("你好 你好 世界 世界", { removeDuplicates: false }));
+console.log(extract("你好 你好 世界 世界", { removeDuplicates: false }));
 // Output: "你好你好世界世界"
 
 // Example including a specific character
 console.log(
-  extractChinese("Hello 你好，世界！", { includeCharacters: "l,! " })
+  extract("Hello 你好，世界！", { includeCharacters: "l,! " })
 );
 // Output: "ll 你好，世界！"
 
 // Example excluding a specific character
-console.log(extractChinese("Hello 你好，世界！", { excludeCharacters: "世" }));
+console.log(extract("Hello 你好，世界！", { excludeCharacters: "世" }));
 // Output: "你好界"
 
 // Example including and excluding characters
 console.log(
-  extractChinese(
+  extract(
     "那座山，正当顶上，有一块仙石 On the summit of the mountain was a mythical stone",
     {
       includeCharacters: "On the summit of the mountain",
