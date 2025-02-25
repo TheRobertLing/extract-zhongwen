@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
-import { ExtractChineseOptions, extractChinese } from "../src/ExtractChinese";
+import { Options, extract } from "../src/ExtractChinese";
 
 type TestInput = {
   input: string;
-  options?: ExtractChineseOptions;
+  options?: Options;
 };
 
 type TestCase = [name: string, testInput: TestInput, expected: string];
@@ -567,7 +567,7 @@ const excludeCharactersTests: TestCase[] = [
 
 describe.each(defaultCases)("Default Tests", (name, testInput, expected) => {
   test(name, () => {
-    expect(extractChinese(testInput.input)).toBe(expected);
+    expect(extract(testInput.input)).toBe(expected);
   });
 });
 
@@ -575,7 +575,7 @@ describe.each(normalizationCases)(
   "Normalization Tests",
   (name, testInput, expected) => {
     test(name, () => {
-      expect(extractChinese(testInput.input, testInput.options)).toBe(expected);
+      expect(extract(testInput.input, testInput.options)).toBe(expected);
     });
   }
 );
@@ -584,7 +584,7 @@ describe.each(duplicationTests)(
   "Duplicate Tests",
   (name, testInput, expected) => {
     test(name, () => {
-      expect(extractChinese(testInput.input, testInput.options)).toBe(expected);
+      expect(extract(testInput.input, testInput.options)).toBe(expected);
     });
   }
 );
@@ -593,7 +593,7 @@ describe.each(includeCharactersTests)(
   "Duplicate Tests",
   (name, testInput, expected) => {
     test(name, () => {
-      expect(extractChinese(testInput.input, testInput.options)).toBe(expected);
+      expect(extract(testInput.input, testInput.options)).toBe(expected);
     });
   }
 );
@@ -602,7 +602,7 @@ describe.each(excludeCharactersTests)(
   "Duplicate Tests",
   (name, testInput, expected) => {
     test(name, () => {
-      expect(extractChinese(testInput.input, testInput.options)).toBe(expected);
+      expect(extract(testInput.input, testInput.options)).toBe(expected);
     });
   }
 );
@@ -611,33 +611,33 @@ describe("User Tests", () => {
   test("The Frontend Developer Validating User Input", () => {
     // The normal user
     expect(
-      extractChinese("ru3guo3zai4jian4bu4neng2hong2zheyan3 是否还能红着脸")
+      extract("ru3guo3zai4jian4bu4neng2hong2zheyan3 是否还能红着脸")
     ).toBe("是否还能红着脸");
 
     // The I did not toggle the right search mode
     expect(
-      extractChinese(
+      extract(
         "Is this working? ㄋㄧˇ ㄅㄨˋ ㄧㄠˋ ㄍㄨㄛˋ ㄌㄞˊ ㄧㄚ tbof erbk"
       )
     ).toBe("");
 
     // The I thought this was LaTeX
     expect(
-      extractChinese(
+      extract(
         "设函数 f(x) = \\int_{0}^{x} e^{-t^2} dt，求其导数 f'(x)。"
       )
     ).toBe("设函数求其导");
 
     // The I thought this was a regex explainer
     expect(
-      extractChinese(
+      extract(
         "匹配所有数字: \\d+，匹配所有字母: [a-zA-Z]+，匹配空白: \\s"
       )
     ).toBe("匹配所有数字母空白");
 
     // The I accidentally pasted my react component here (larger input)
     expect(
-      extractChinese(`
+      extract(`
         import { useState, useEffect } from "react";
         import { Card, CardContent } from "@/components/ui/card";
         import { Input } from "@/components/ui/input";
@@ -729,14 +729,14 @@ describe("User Tests", () => {
 
     // The I want to try hack the website
     expect(
-      extractChinese(`
+      extract(`
       " <script>alert("你的电脑被黑了")</script>
     `)
     ).toBe("你的电脑被黑了");
 
     // The I just lost my 50 / 50 to QiQi on the Mavuika Banner
     expect(
-      extractChinese("玛维卡圣遗物推荐  mjhnghnvcbfndftgbhujmyhik,ul8.yol.p;/'")
+      extract("玛维卡圣遗物推荐  mjhnghnvcbfndftgbhujmyhik,ul8.yol.p;/'")
     ).toBe("玛维卡圣遗物推荐");
   });
 });

@@ -1,4 +1,4 @@
-type ExtractChineseOptions = {
+type Options = {
   normalizeUnicode?: boolean;
   removeDuplicates?: boolean; // Does not remove simplified/traditional character duplicates e.g. 国, 國 will both remain
   includeCharacters?: string;
@@ -121,14 +121,14 @@ const removeDuplicatesFromString = (str: string): string => {
   return result;
 };
 
-const extractChinese = (
+const extract = (
   input: string,
   {
     normalizeUnicode = true,
     removeDuplicates = true,
     includeCharacters = "",
     excludeCharacters = "",
-  }: ExtractChineseOptions = {}
+  }: Options = {}
 ): string => {
   const { whitelist, blacklist } = combineToRegex(
     characterUnicodeRanges,
@@ -142,7 +142,6 @@ const extractChinese = (
     ...excludeCharacters.split(""),
   ]);
 
-
   // Normalize string but prevent whitelisted characters from being normalized
   if (normalizeUnicode) {
     input = input.normalize("NFKC");
@@ -150,8 +149,9 @@ const extractChinese = (
     for (
       let i = 0, j = 0, m = original.length, n = input.length;
       i < m && j < n;
-      // Iterator manually incremented
-    ) {
+
+    ) // Iterator manually incremented
+    {
       const char1 = String.fromCodePoint(original.codePointAt(i)!);
       const char2 = String.fromCodePoint(input.codePointAt(j)!);
 
@@ -176,4 +176,4 @@ const extractChinese = (
   return input;
 };
 
-export { ExtractChineseOptions, extractChinese };
+export { Options, extract };
