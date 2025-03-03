@@ -58,7 +58,7 @@ const characterUnicodeRanges: UnicodeRanges[] = [
  */
 
 const unicodeToRegex = (ranges: UnicodeRanges[]): string => {
-  let result = "";
+  let result: string = "";
 
   for (let i = 0, n = ranges.length; i < n; i++) {
     const [start, end] = ranges[i];
@@ -88,8 +88,8 @@ const combineToRegex = (
   const includeRegEx: string = userListsToRegex(includeCharacters);
   const excludeRegEx: string = userListsToRegex(excludeCharacters);
 
-  const whitelistPattern = `[^${rangesRegEx}${includeRegEx}]+`;
-  const blacklistPattern = excludeRegEx ? `[${excludeRegEx}]+` : "(?!)"; // To avoid regex error due to empty string
+  const whitelistPattern: string = `[^${rangesRegEx}${includeRegEx}]+`;
+  const blacklistPattern: string = excludeRegEx ? `[${excludeRegEx}]+` : "(?!)"; // To avoid regex error due to empty string
 
   const whitelist = new RegExp(whitelistPattern, "gu");
   const blacklist = new RegExp(blacklistPattern, "gu");
@@ -101,8 +101,8 @@ const combineToRegex = (
 };
 
 const removeDuplicatesFromString = (str: string): string => {
-  const seen = new Set<number>();
-  let result = "";
+  const seen: Set<number> = new Set<number>();
+  let result: string = "";
 
   for (let i = 0, n = str.length; i < n; i++) {
     // https://www.linkedin.com/pulse/staying-clear-surrogate-pairs-issues-javascript-mazen-sharkawy-ofw1f/
@@ -148,10 +148,9 @@ const extract = (
 
     for (
       let i = 0, j = 0, m = original.length, n = input.length;
-      i < m && j < n;
+      i < m && j < n; // Iterator manually incremented
 
-    ) // Iterator manually incremented
-    {
+    ) {
       const char1 = String.fromCodePoint(original.codePointAt(i)!);
       const char2 = String.fromCodePoint(input.codePointAt(j)!);
 
@@ -166,8 +165,7 @@ const extract = (
     }
   }
 
-  input = input.replace(whitelist, "");
-  input = input.replace(blacklist, "");
+  input = input.replace(whitelist, "").replace(blacklist, "");
 
   if (removeDuplicates) {
     input = removeDuplicatesFromString(input);
